@@ -67,4 +67,23 @@
 
     </GridLayout>
 
+    <Button
+        android:id="@+id/buttonMenu"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textViewOutput"
+        android:layout_toRightOf="@+id/buttonDeLast"
+        android:text="menu" />
+
+    <ListView
+        android:id="@+id/listViewMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonDeLast"
+        android:layout_alignRight="@+id/editTextInput"
+        android:layout_below="@+id/buttonMenu" >
+
+    </ListView>
+
 </RelativeLayout>

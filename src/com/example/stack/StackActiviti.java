@@ -16,6 +16,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -37,6 +40,9 @@ public class StackActiviti extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stack_activiti);
 
+		// Button btn = (Button) findViewById(R.id.buttonMenu);
+		// registerForContextMenu(btn);
+
 		datasource = new StacksDataSource(this);
 		datasource.open();
 
@@ -44,6 +50,29 @@ public class StackActiviti extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.setHeaderTitle("Context Menu");
+		menu.add(0, v.getId(), 0, "Action 1");
+		menu.add(0, v.getId(), 0, "Action 2");
+
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getTitle() == "Action 1") {
+			Toast.makeText(this, "Action 1 invoked", Toast.LENGTH_SHORT).show();
+		} else if (item.getTitle() == "Action 2") {
+			Toast.makeText(this, "Action 2 invoked", Toast.LENGTH_SHORT).show();
+		} else {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -107,8 +136,9 @@ public class StackActiviti extends Activity {
 				String messageStack = inputTextOkno.getText().toString();
 				datasource.createStack(messageStack);
 
-				toastMessage = "Word" + messageStack + "is saved"
-						+ " items in stack is" + datasource.getCountStacks();
+				toastMessage = String.format(
+						getResources().getString(R.string.push_Message),
+						messageStack, datasource.getCountStacks());
 
 				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
 						.show();
@@ -117,25 +147,23 @@ public class StackActiviti extends Activity {
 			if (((Button) v).getId() == bPop.getId()) {
 				datasource.beTrans();
 				Stack firstStack = datasource.getFirstStack();
-				if(firstStack!=null)
-				{
-				long id = firstStack.getId();
-				int err = datasource.deleteStack(id);
-				if (err==-1) {
-					toastMessage = ("database is empty");
-				}
+				if (firstStack != null) {
+					long id = firstStack.getId();
+					int err = datasource.deleteStack(id);
+					if (err == -1) {
+						toastMessage = getResources().getString(R.string.error);
+					}
 
-				
-				toastMessage = "PoPed first... " + firstStack.getStack()
-						+ " size is" + datasource.getCountStacks();
-				}else
-				{
-					toastMessage = "Something bad happens";
-					
+					toastMessage = String.format(
+							getResources().getString(R.string.pop_Message),
+							firstStack.getStack(), datasource.getCountStacks());
+
+				} else {
+					toastMessage = getResources().getString(R.string.error);
+
 				}
 				datasource.endTrans();
-				
-				
+
 				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
 						.show();
 
@@ -145,25 +173,24 @@ public class StackActiviti extends Activity {
 				// delete last
 				datasource.beTrans();
 				Stack lastStack = datasource.getLastStack();
-				if(lastStack!=null)
-				{
-				long id = lastStack.getId();
-				
-				int err = datasource.deleteStack(id);
-				if (err==-1) {
-					toastMessage = ("database is empty");
+				if (lastStack != null) {
+					long id = lastStack.getId();
+
+					int err = datasource.deleteStack(id);
+					if (err == -1) {
+						toastMessage = getResources().getString(R.string.error);
+
+					}
+					datasource.endTrans();
+
+					toastMessage = String.format(
+							getResources().getString(R.string.delete_Message),
+							lastStack.getStack(), datasource.getCountStacks());
+
+				} else {
+					toastMessage = getResources().getString(R.string.error);
 
 				}
-				datasource.endTrans();
-
-				toastMessage = "Deleted last... " + lastStack.getStack()
-						+ " size is" + datasource.getCountStacks();
-
-			}else
-			{
-				toastMessage = "Something bad happens";
-				
-			}
 				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
 						.show();
 
@@ -172,7 +199,6 @@ public class StackActiviti extends Activity {
 
 	}
 
-	
 	// ziskano z tutu
 	// http://www.vogella.com/tutorials/AndroidSQLite/article.html
 
@@ -396,9 +422,5 @@ public class StackActiviti extends Activity {
 			stack.setStack(cursor.getString(1));
 			return stack;
 		}
-	}	@Override
-	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 }
