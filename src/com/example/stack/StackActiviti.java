@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,18 +30,17 @@ import android.os.Build;
 
 public class StackActiviti extends Activity {
 	private static StacksDataSource datasource;
-	public static List<Stack> stackValues; 
-	
-	
+	public static List<Stack> stackValues;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stack_activiti);
-		
-		datasource = new StacksDataSource(this);
-	    datasource.open();
 
-	    if (savedInstanceState == null) {
+		datasource = new StacksDataSource(this);
+		datasource.open();
+
+		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
@@ -103,50 +103,80 @@ public class StackActiviti extends Activity {
 			// TODO Auto-generated method stub
 			String toastMessage;
 			if (((Button) v).getId() == bPush.getId()) {
-				
+
 				String messageStack = inputTextOkno.getText().toString();
 				datasource.createStack(messageStack);
-				
-				toastMessage = "Word" + messageStack + "is saved"+" items in stack is"+(stackValues.size()+1);
-				
-				Toast.makeText(getActivity(),toastMessage,Toast.LENGTH_SHORT).show();
-				
-				
+
+				toastMessage = "Word" + messageStack + "is saved"
+						+ " items in stack is" + datasource.getCountStacks();
+
+				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
+						.show();
 
 			}
 			if (((Button) v).getId() == bPop.getId()) {
-				int first =stackValues.size()-1;
-				long id =stackValues.get(first).getId();
-				datasource.deleteStack(id);
-				stackValues.remove(first);
-				toastMessage ="PoPed first..."+" size is"+stackValues.size();
-				Toast.makeText(getActivity(),toastMessage ,	Toast.LENGTH_SHORT).show();
+				datasource.beTrans();
+				Stack firstStack = datasource.getFirstStack();
+				if(firstStack!=null)
+				{
+				long id = firstStack.getId();
+				int err = datasource.deleteStack(id);
+				if (err==-1) {
+					toastMessage = ("database is empty");
+				}
+
 				
+				toastMessage = "PoPed first... " + firstStack.getStack()
+						+ " size is" + datasource.getCountStacks();
+				}else
+				{
+					toastMessage = "Something bad happens";
+					
+				}
+				datasource.endTrans();
+				
+				
+				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
+						.show();
 
 			}
-			
-			if (true) {
-				//delete last
-				int last =stackValues.size()-1;
-				long id =stackValues.get(last).getId();
-				datasource.deleteStack(id);
-				stackValues.remove(last);
+
+			if (((Button) v).getId() == bDeLast.getId()) {
+				// delete last
+				datasource.beTrans();
+				Stack lastStack = datasource.getLastStack();
+				if(lastStack!=null)
+				{
+				long id = lastStack.getId();
 				
-				toastMessage ="Deleted last..."+" size is"+stackValues.size();
+				int err = datasource.deleteStack(id);
+				if (err==-1) {
+					toastMessage = ("database is empty");
+
+				}
+				datasource.endTrans();
+
+				toastMessage = "Deleted last... " + lastStack.getStack()
+						+ " size is" + datasource.getCountStacks();
+
+			}else
+			{
+				toastMessage = "Something bad happens";
 				
-				Toast.makeText(getActivity(),toastMessage ,Toast.LENGTH_SHORT).show();
-				
-				
+			}
+				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
+						.show();
 
 			}
 		}
 
 	}
+
+	
 	// ziskano z tutu
 	// http://www.vogella.com/tutorials/AndroidSQLite/article.html
 
 	class DB_Helper extends SQLiteOpenHelper {
-		
 
 		public static final String TABLE_STACKS = "stacks";
 		public static final String COLUMN_ID = "_id";
@@ -154,16 +184,14 @@ public class StackActiviti extends Activity {
 
 		private static final String DATABASE_NAME = "stack.db";
 		private static final int DATABASE_VERSION = 1;
-		private static final String DROP_TABLE="DROP TABLE " + TABLE_STACKS;
+		private static final String DROP_TABLE = "DROP TABLE " + TABLE_STACKS;
 
 		// Database creation sql statement
-		private static final String DATABASE_CREATE = "create table "
+		private static final String DATABASE_CREATE = "CREATE TABLE "
 				+ TABLE_STACKS + "(" + COLUMN_ID
-				+ " integer primary key autoincrement, " + COLUMN_STACK
-				+ " text not null);";
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_STACK
+				+ " TEXT NOT NULL);";
 
-		
-		
 		public DB_Helper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
@@ -247,37 +275,102 @@ public class StackActiviti extends Activity {
 			return newStack;
 		}
 
-		public long getIdLastStack()
-		{
-			Cursor c = database.query(DB_Helper.TABLE_STACKS,
-					new String[] { "max(" + DB_Helper.COLUMN_ID + ")" },null, null, null, null,
-					null);
-			c.moveToFirst();
-			int rowID = c.getInt(0);
-			return rowID;
-			
+		public Stack getFirstStack() {
+			if (getCountStacks() > 0) {
+				Cursor c = database.query(DB_Helper.TABLE_STACKS, null, null,
+						null, null, null, DB_Helper.COLUMN_ID + " DESC", "1");
+				c.moveToFirst();
+				Stack newStack = cursorToStack(c);
+				c.close();
+				return newStack;
+			} else {
+				return null;
+			}
 		}
-		
-		public long getIdFirstStack()
-		{
-			Cursor c = database.query(DB_Helper.TABLE_STACKS,
-					new String[] { "min(" + DB_Helper.COLUMN_ID + ")" },null, null, null, null,
-					null);
-			c.moveToFirst();
-			int rowID = c.getInt(0);
-			return rowID;
-			
+
+		public Stack getLastStack() {
+			if (getCountStacks() > 0) {
+				Cursor c = database.query(DB_Helper.TABLE_STACKS, null, null,
+						null, null, null, DB_Helper.COLUMN_ID + " ASC", "1");
+				c.moveToFirst();
+				Stack newStack = cursorToStack(c);
+				c.close();
+				return newStack;
+			} else {
+				return null;
+			}
 		}
-		
-		public void deleteStack(long id) {
-			database.delete(DB_Helper.TABLE_STACKS, DB_Helper.COLUMN_ID + " = "
-					+ id, null);
+
+		public long getIdLastStack() {
+			if (getCountStacks() > 0) {
+				Cursor c = database.query(DB_Helper.TABLE_STACKS,
+						new String[] { "max(" + DB_Helper.COLUMN_ID + ")" },
+						null, null, null, null, null);
+				c.moveToFirst();
+				int rowID = c.getInt(0);
+				c.close();
+				return rowID;
+			} else {
+				return -1;
+			}
 		}
-		
-		public void clearDatabaseStack() {
+
+		public long getIdFirstStack() {
+			if (getCountStacks() > 0) {
+				Cursor c = database.query(DB_Helper.TABLE_STACKS,
+						new String[] { "min(" + DB_Helper.COLUMN_ID + ")" },
+						null, null, null, null, null);
+				c.moveToFirst();
+				int rowID = c.getInt(0);
+				c.close();
+				return rowID;
+			} else {
+				return -1;
+			}
+		}
+
+		public int deleteStack(long id) {
+
+			if (getCountStacks() > 0) {
+				database.delete(DB_Helper.TABLE_STACKS, DB_Helper.COLUMN_ID
+						+ " = " + id, null);
+
+				return 0;
+			} else {
+				return -1;
+			}
+		}
+
+		public void deleteDatabaseStack() {
+			beTrans();
 			database.execSQL(DB_Helper.DROP_TABLE);
 			database.execSQL(DB_Helper.DATABASE_CREATE);
-			
+			endTrans();
+
+		}
+
+		public void clearDatabaseStack() {
+			beTrans();
+			database.delete(DB_Helper.TABLE_STACKS, "1", null);
+			endTrans();
+
+		}
+
+		public void beTrans() {
+			database.beginTransaction();
+		}
+
+		public void endTrans() {
+			database.setTransactionSuccessful();
+			database.endTransaction();
+		}
+
+		public long getCountStacks() {
+			Cursor cursor = database.query(DB_Helper.TABLE_STACKS, allColumns,
+					null, null, null, null, null);
+			long count = cursor.getCount();
+			cursor.close();
+			return count;
 		}
 
 		public List<Stack> getAllStacks() {
@@ -303,5 +396,9 @@ public class StackActiviti extends Activity {
 			stack.setStack(cursor.getString(1));
 			return stack;
 		}
+	}	@Override
+	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
