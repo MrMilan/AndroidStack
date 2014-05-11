@@ -8,13 +8,20 @@
     <string name="pop">Pop</string>
     <string name="push">Push</string>
     <string name="delete_last">Smazat poslední</string>
-    <string name="push_Message">Slovo %1$s bylo uloženo, počet věcí v zásobníku %2$d</string>
-    <string name="pop_Message">PoPnuté první -> %1$s, počet věcí v zásobníku %2$d</string>
-    <string name="delete_Message">Zamazáno poslední -> %1$s, počet věcí v zásobníku %2$d</string>
-    <string name="error">Něco se pokazilo</string>
+    <string name="message_Push">Slovo  %1$s  bylo uloženo, počet věcí v zásobníku %2$d</string>
+    <string name="message_Pop">PoPnuté první -> %1$s , počet věcí v zásobníku %2$d</string>
+    <string name="message_Delete">Zamazáno poslední -> %1$s , počet věcí v zásobníku %2$d</string>
+    <string name="message_ClearInput">Vstupní pole smazáno</string>
+    <string name="message_ClearDB">DB pročištěna</string>
+    <string name="message_ClearMenu">Musíš mě podržet déle :-P</string>
+    <string name="errorMessage_Global">Chyba! Něco se pokazilo</string>
+    <string name="errorMessage_EmptyDB">Prázdná DB, Neni co dělat :-D</string>
+    <string name="errorMessage_EmptyInput">Vstup nesmí být prázdný (a ne, že tam strčíš mezeru ty prevíte), ten ti neuložim :-P</string>
     <string name="tsech">Česky</string>
     <string name="englick">Anglicky</string>
-    <string name="menu">Menu</string>
+    <string name="lmenu">Menu jazyků</string>
+    <string name="clearMenuTitle">Menu Mazání\n (dlouze stiskni)</string>
     <string name="clearMenu">Menu Mazání</string>
-    
+    <string name="shootDown">Vypni mne</string>
+
 </resources>

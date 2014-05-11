@@ -8,13 +8,20 @@
     <string name="pop">Pop</string>
     <string name="push">Push</string>
     <string name="delete_last">Delete last</string>
-    <string name="push_Message">Word %1$s is saved, items in stack is %2$d</string>
-    <string name="pop_Message">PoPed first -> %1$s, items in stack is %2$d</string>
-    <string name="delete_Message">Deleted last -> %1$s, items in stack is %2$d</string>
-    <string name="error">Something bad happens</string>
+    <string name="message_Push">Word  %1$s  is saved, items in stack is %2$d</string>
+    <string name="message_Pop">PoPed first -> %1$s , items in stack is %2$d</string>
+    <string name="message_Delete">Deleted last -> %1$s , items in stack is %2$d</string>
+    <string name="message_ClearInput">Input Cleard</string>
+    <string name="message_ClearDB">DB cleard</string>
+    <string name="message_ClearMenu">You must press me longer time :-P</string>
+    <string name="errorMessage_Global">Error! Something bad happens</string>
+    <string name="errorMessage_EmptyDB">Empty DB, I nothing doo doo :-D</string>
+    <string name="errorMessage_EmptyInput">Input must be filled (no space), no word nothing to save :-P</string>
     <string name="tsech">Czech</string>
-    <string name="englick">Anglicky</string>
-    <string name="menu">Menu</string>
+    <string name="englick">English</string>
+    <string name="lMenu">Lang Menu</string>
+    <string name="clearMenuTitle">Clear Menu \n (long press)</string>
     <string name="clearMenu">Clear Menu</string>
+    <string name="shootDown">ShootDown</string>
 
 </resources>

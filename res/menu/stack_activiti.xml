@@ -1,11 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.stack.StackActiviti" >
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <group android:id="@+id/grouplang" android:visible="true" android:enabled="true" android:orderInCategory="1" android:checkableBehavior="none" android:menuCategory="container">
+    <item android:id="@+id/iteMcsech" android:title="@string/tsech" android:orderInCategory="1" android:showAsAction="never"></item>
+    <item android:id="@+id/iteMengo" android:title="@string/englick" android:orderInCategory="2" android:showAsAction="never"></item>
+    </group>
+    <group android:id="@+id/groupsys" android:orderInCategory="2" android:visible="true" android:enabled="true" android:checkableBehavior="none" android:menuCategory="system">
+        <item android:id="@+id/iteMshoot" android:title="@string/shootDown" android:orderInCategory="1"></item>
+    </group>
 
 </menu>

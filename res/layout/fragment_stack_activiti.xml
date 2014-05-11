@@ -9,17 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.stack.StackActiviti$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/textViewOutput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="40dp"
-        android:text="Output"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <Button
         android:id="@+id/buttonPop"
         android:layout_width="wrap_content"
@@ -27,7 +16,7 @@
         android:layout_alignBaseline="@+id/buttonPush"
         android:layout_alignBottom="@+id/buttonPush"
         android:layout_alignParentLeft="true"
-        android:text="pop" />
+        android:text="@string/pop" />
 
     <EditText
         android:id="@+id/editTextInput"
@@ -36,7 +25,8 @@
         android:layout_above="@+id/buttonPop"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="76dp"
-        android:ems="10" >
+        android:ems="10"
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
@@ -47,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonPush"
         android:layout_centerHorizontal="true"
-        android:text="Delete last" />
+        android:text="@string/delete_last" />
 
     <Button
         android:id="@+id/buttonPush"
@@ -57,14 +47,13 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="72dp"
         android:layout_marginRight="18dp"
-        android:text="push" />
+        android:text="@string/push" />
 
     <GridLayout
+        android:id="@+id/gridLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewOutput"
         android:layout_alignRight="@+id/editTextInput" >
-
     </GridLayout>
 
     <Button
@@ -72,8 +61,8 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textViewOutput"
-        android:layout_toRightOf="@+id/buttonDeLast"
-        android:text="menu" />
+        android:layout_alignTop="@+id/gridLayout1"
+        android:layout_centerHorizontal="true"
+        android:text="@string/clearMenuTitle" />
 
 </RelativeLayout>

@@ -2,17 +2,17 @@ package com.example.stack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,24 +24,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class StackActiviti extends Activity {
 	private static StacksDataSource datasource;
-	public static List<Stack> stackValues;
+	public static EditText editTextInput;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stack_activiti);
 
-		Button btn = (Button) findViewById(R.id.buttonMenu);
-		registerForContextMenu(btn);
+		getActionBar().setTitle(R.string.app_name);
 
 		datasource = new StacksDataSource(this);
 		datasource.open();
@@ -58,19 +54,35 @@ public class StackActiviti extends Activity {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderTitle(getResources().getString(R.string.clearMenu));
-		menu.add(0,1, 0, getResources().getString(R.string.clear));
-		menu.add(0, 100, 0, getResources().getString(R.string.clear_DB));
+		menu.add(0, R.id.clearInput, 0, getResources()
+				.getString(R.string.clear));
+		menu.add(0, R.id.clearDB, 0, getResources()
+				.getString(R.string.clear_DB));
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getItemId() == 1) {
-			//clearInput(item.getItemId());
-		} else if (item.getItemId() == 100) {
-		//	clearDB(item.getItemId());
+
+		String toastMessage = null;
+		if (item.getItemId() == R.id.clearInput) {
+			editTextInput.setText("");
+			toastMessage = getResources()
+					.getString(R.string.message_ClearInput);
+		} else if (item.getItemId() == R.id.clearDB) {
+			if (datasource.clearDatabaseStack() != 0) {
+				toastMessage = getResources().getString(
+						R.string.errorMessage_EmptyDB);
+			} else {
+				toastMessage = getResources().getString(
+						R.string.message_ClearDB);
+			}
 		} else {
+			toastMessage = getResources().getString(
+					R.string.errorMessage_Global);
+			Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
 			return false;
 		}
+		Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
 		return true;
 	}
 
@@ -88,24 +100,55 @@ public class StackActiviti extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		String languageToLoad = "en";
+		if (id == R.id.iteMcsech) {
+			languageToLoad = "cs";
+			changeLang(languageToLoad);
 			return true;
 		}
+		if (id == R.id.iteMengo) {
+			changeLang(languageToLoad);
+			return true;
+		}
+		if (id == R.id.iteMshoot) {
+			// System.exit(0);
+			// this.finish();
+			android.os.Process.killProcess(android.os.Process.myPid());
+			// finish();
+			// Process.killProcess(android.os.Process.myPid());
+		}
+
 		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * @param languageToLoad
+	 */
+	public void changeLang(String languageToLoad) {
+		Locale locale = new Locale(languageToLoad);
+
+		Locale.setDefault(locale);
+		Configuration config = new Configuration();
+		config.locale = locale;
+		Resources resources = getResources();
+		resources.updateConfiguration(config, resources.getDisplayMetrics());
+		recreate();
+
 	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
+
 	public static class PlaceholderFragment extends Fragment implements
 			OnClickListener {
 		Button bPop;
 		Button bPush;
 		Button bDeLast;
-		EditText inputTextOkno;
+
+		Button bClear;
 
 		public PlaceholderFragment() {
-			stackValues = new ArrayList<StackActiviti.Stack>();
 		}
 
 		@Override
@@ -117,11 +160,15 @@ public class StackActiviti extends Activity {
 			bPop = (Button) rootView.findViewById(R.id.buttonPop);
 			bPush = (Button) rootView.findViewById(R.id.buttonPush);
 			bDeLast = (Button) rootView.findViewById(R.id.buttonDeLast);
+			editTextInput = (EditText) rootView
+					.findViewById(R.id.editTextInput);
+			editTextInput.setOnClickListener(this);
 			bPop.setOnClickListener(this);
 			bPush.setOnClickListener(this);
 			bDeLast.setOnClickListener(this);
-			inputTextOkno = (EditText) rootView
-					.findViewById(R.id.editTextInput);
+
+			bClear = (Button) rootView.findViewById(R.id.buttonMenu);
+			registerForContextMenu(bClear);
 
 			return rootView;
 		}
@@ -130,16 +177,29 @@ public class StackActiviti extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			String toastMessage;
+
+			if (((Button) v).getId() == bClear.getId()) {
+
+				toastMessage = getResources().getString(
+						R.string.message_ClearMenu);
+
+			}
 			if (((Button) v).getId() == bPush.getId()) {
 
-				String messageStack = inputTextOkno.getText().toString();
-				datasource.createStack(messageStack);
-
-				toastMessage = String.format(
-						getResources().getString(R.string.push_Message),
-						messageStack, datasource.getCountStacks());
-
-				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
+				String messageStack = editTextInput.getText().toString();
+				int toasTime;
+				if (messageStack.matches("")||messageStack.matches("\\s+")) {
+					toastMessage = getResources().getString(
+							R.string.errorMessage_EmptyInput);
+					toasTime = Toast.LENGTH_LONG;
+				} else {
+					datasource.createStack(messageStack);
+					toasTime = Toast.LENGTH_SHORT;
+					toastMessage = String.format(
+							getResources().getString(R.string.message_Push),
+							messageStack, datasource.getCountStacks());
+				}
+				Toast.makeText(getActivity(), toastMessage, toasTime)
 						.show();
 
 			}
@@ -150,15 +210,17 @@ public class StackActiviti extends Activity {
 					long id = firstStack.getId();
 					int err = datasource.deleteStack(id);
 					if (err == -1) {
-						toastMessage = getResources().getString(R.string.error);
+						toastMessage = getResources().getString(
+								R.string.errorMessage_EmptyDB);
 					}
 
 					toastMessage = String.format(
-							getResources().getString(R.string.pop_Message),
+							getResources().getString(R.string.message_Pop),
 							firstStack.getStack(), datasource.getCountStacks());
 
 				} else {
-					toastMessage = getResources().getString(R.string.error);
+					toastMessage = getResources().getString(
+							R.string.errorMessage_Global);
 
 				}
 				datasource.endTrans();
@@ -177,18 +239,18 @@ public class StackActiviti extends Activity {
 
 					int err = datasource.deleteStack(id);
 					if (err == -1) {
-						toastMessage = getResources().getString(R.string.error);
+						toastMessage = getResources().getString(
+								R.string.errorMessage_EmptyDB);
 
 					}
 					datasource.endTrans();
-
 					toastMessage = String.format(
-							getResources().getString(R.string.delete_Message),
+							getResources().getString(R.string.message_Delete),
 							lastStack.getStack(), datasource.getCountStacks());
 
 				} else {
-					toastMessage = getResources().getString(R.string.error);
-
+					toastMessage = getResources().getString(
+							R.string.errorMessage_Global);
 				}
 				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
 						.show();
@@ -368,10 +430,11 @@ public class StackActiviti extends Activity {
 
 		public int deleteDatabaseStack() {
 			if (getCountStacks() > 0) {
-				beTrans();
+				database.beginTransaction();
 				database.execSQL(DB_Helper.DROP_TABLE);
 				database.execSQL(DB_Helper.DATABASE_CREATE);
-				endTrans();
+				database.setTransactionSuccessful();
+				database.endTransaction();
 				return 0;
 			} else {
 				return -1;
