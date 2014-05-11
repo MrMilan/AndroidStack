@@ -177,7 +177,7 @@ public class StackActiviti extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			String toastMessage;
-
+			int toasTime =Toast.LENGTH_SHORT;
 			if (((Button) v).getId() == bClear.getId()) {
 
 				toastMessage = getResources().getString(
@@ -187,14 +187,13 @@ public class StackActiviti extends Activity {
 			if (((Button) v).getId() == bPush.getId()) {
 
 				String messageStack = editTextInput.getText().toString();
-				int toasTime;
+				
 				if (messageStack.matches("")||messageStack.matches("\\s+")) {
 					toastMessage = getResources().getString(
 							R.string.errorMessage_EmptyInput);
 					toasTime = Toast.LENGTH_LONG;
 				} else {
 					datasource.createStack(messageStack);
-					toasTime = Toast.LENGTH_SHORT;
 					toastMessage = String.format(
 							getResources().getString(R.string.message_Push),
 							messageStack, datasource.getCountStacks());
@@ -225,7 +224,7 @@ public class StackActiviti extends Activity {
 				}
 				datasource.endTrans();
 
-				Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT)
+				Toast.makeText(getActivity(), toastMessage, toasTime)
 						.show();
 
 			}
