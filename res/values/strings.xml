@@ -15,5 +15,6 @@
     <string name="tsech">Czech</string>
     <string name="englick">Anglicky</string>
     <string name="menu">Menu</string>
+    <string name="clearMenu">Clear Menu</string>
 
 </resources>

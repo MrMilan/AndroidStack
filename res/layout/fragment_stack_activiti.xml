@@ -76,14 +76,4 @@
         android:layout_toRightOf="@+id/buttonDeLast"
         android:text="menu" />
 
-    <ListView
-        android:id="@+id/listViewMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonDeLast"
-        android:layout_alignRight="@+id/editTextInput"
-        android:layout_below="@+id/buttonMenu" >
-
-    </ListView>
-
 </RelativeLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Zásobník</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="clear">Vymaž vstup</string>
+    <string name="clear_DB">Vymaž záznamy</string>
+    <string name="pop">Pop</string>
+    <string name="push">Push</string>
+    <string name="delete_last">Smazat poslední</string>
+    <string name="push_Message">Slovo %1$s bylo uloženo, počet věcí v zásobníku %2$d</string>
+    <string name="pop_Message">PoPnuté první -> %1$s, počet věcí v zásobníku %2$d</string>
+    <string name="delete_Message">Zamazáno poslední -> %1$s, počet věcí v zásobníku %2$d</string>
+    <string name="error">Něco se pokazilo</string>
+    <string name="tsech">Česky</string>
+    <string name="englick">Anglicky</string>
+    <string name="menu">Menu</string>
+    <string name="clearMenu">Menu Mazání</string>
+    
+</resources>

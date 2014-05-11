@@ -25,38 +25,40 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
-        public static final int buttonDeLast=0x7f080005;
-        public static final int buttonMenu=0x7f080006;
-        public static final int buttonPop=0x7f080002;
-        public static final int buttonPush=0x7f080003;
-        public static final int container=0x7f080000;
-        public static final int editTextInput=0x7f080004;
-        public static final int listViewMenu=0x7f080007;
-        public static final int textViewOutput=0x7f080001;
+        public static final int action_settings=0x7f050009;
+        public static final int buttonDeLast=0x7f050007;
+        public static final int buttonMenu=0x7f050008;
+        public static final int buttonPop=0x7f050004;
+        public static final int buttonPush=0x7f050005;
+        public static final int clearDB=0x7f050001;
+        public static final int clearInput=0x7f050000;
+        public static final int container=0x7f050002;
+        public static final int editTextInput=0x7f050006;
+        public static final int textViewOutput=0x7f050003;
     }
     public static final class layout {
         public static final int activity_stack_activiti=0x7f030000;
         public static final int fragment_stack_activiti=0x7f030001;
     }
     public static final class menu {
-        public static final int stack_activiti=0x7f070000;
+        public static final int stack_activiti=0x7f080000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int clear=0x7f050002;
-        public static final int clear_DB=0x7f050003;
-        public static final int delete_Message=0x7f050009;
-        public static final int delete_last=0x7f050006;
-        public static final int englick=0x7f05000c;
-        public static final int error=0x7f05000a;
-        public static final int menu=0x7f05000d;
-        public static final int pop=0x7f050004;
-        public static final int pop_Message=0x7f050008;
-        public static final int push=0x7f050005;
-        public static final int push_Message=0x7f050007;
-        public static final int tsech=0x7f05000b;
+        public static final int action_settings=0x7f060001;
+        public static final int app_name=0x7f060000;
+        public static final int clear=0x7f060002;
+        public static final int clearMenu=0x7f06000e;
+        public static final int clear_DB=0x7f060003;
+        public static final int delete_Message=0x7f060009;
+        public static final int delete_last=0x7f060006;
+        public static final int englick=0x7f06000c;
+        public static final int error=0x7f06000a;
+        public static final int menu=0x7f06000d;
+        public static final int pop=0x7f060004;
+        public static final int pop_Message=0x7f060008;
+        public static final int push=0x7f060005;
+        public static final int push_Message=0x7f060007;
+        public static final int tsech=0x7f06000b;
     }
     public static final class style {
         /** 
@@ -80,10 +82,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }
